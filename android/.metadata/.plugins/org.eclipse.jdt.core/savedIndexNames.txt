@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+/home/gin/dev/projects/jasoft/agenda/repo-master/android/.metadata/.plugins/org.eclipse.jdt.core
+140754016.index
+1041955561.index
+1423228332.index
