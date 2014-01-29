@@ -1,0 +1,9 @@
+jasoft_viringo_core:
+    resource: "@JasoftViringoCoreBundle/Resources/config/routing.php"
+    prefix:   /
+
+jasoft_agenda_app:
+    resource: "@JasoftAgendaAppBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
