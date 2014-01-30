@@ -1,0 +1,6 @@
+parameters:
+    app_info:
+        name: Agenda
+        server: Servidor Local
+        version: 0.0.1
+        context_root:   /agenda

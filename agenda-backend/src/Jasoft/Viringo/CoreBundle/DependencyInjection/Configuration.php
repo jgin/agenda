@@ -20,10 +20,23 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('jasoft_viringo_core');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
-
+        $rootNode
+            ->children()
+                ->arrayNode('exception_handling')
+                    ->children()
+                        ->arrayNode('exception_email')
+                            ->children()
+                                ->booleanNode('send_email')->defaultFalse()->end()
+                                ->scalarNode('sender')->end()
+                                ->scalarNode('receptor')->end()
+                                ->scalarNode('subject')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+        
         return $treeBuilder;
     }
 }

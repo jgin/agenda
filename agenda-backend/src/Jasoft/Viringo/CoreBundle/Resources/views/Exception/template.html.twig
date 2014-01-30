@@ -1,0 +1,24 @@
+<table>
+    <tr><td>Aplicación:</td><td>{{ appinfo.name }}</td></tr>
+    <tr><td>Servidor:</td><td>{{ appinfo.server }}</td></tr>
+    <tr><td>Fecha y hora:</td><td>{{ 'now' | date('Y-m-d H:i:s') }}</td></tr>
+    <tr><td>Usuario logeado:</td><td>{% if user is not null %}{{ user.username }}{% endif %}</td></tr>
+    <tr><td>Ip:</td><td>{{ request.clientIp }}</td></tr>
+    <tr><td>Url:</td><td>{{ request.requestUri }}</td></tr>
+    <tr><td>Request Method:</td><td>{{ request.method }}</td></tr>
+    <tr><td>Request Params:</td>
+        <td>
+            {% for type, paramArray in requestParams %}
+            <table title="{{ type }}">
+                {% for rpName, rpValue in paramArray %}
+                <tr>
+                    <th>{{ rpName }}</th>
+                    <td>{{ rpValue }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endfor %}
+        </td></tr>
+    <tr><td style="vertical-align:top; padding-top:5px;">Excepción:</td><td>{{ exception.message }}</td></tr>
+    <tr><td style="vertical-align:top; padding-top:5px;">Detalle:</td><td>{{ exception.traceAsString | nl2br }}</td></tr>
+</table>

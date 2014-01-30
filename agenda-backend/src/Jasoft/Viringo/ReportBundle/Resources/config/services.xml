@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <!--
+    <parameters>
+        <parameter key="jasoft_viringo_report.example.class">Jasoft\Viringo\ReportBundle\Example</parameter>
+    </parameters>
+
+    <services>
+        <service id="jasoft_viringo_report.example" class="%jasoft_viringo_report.example.class%">
+            <argument type="service" id="service_id" />
+            <argument>plain_value</argument>
+            <argument>%parameter_name%</argument>
+        </service>
+    </services>
+    -->
+    <services>
+        <service id="jasoft_viringo_report.service.report" class="Jasoft\Viringo\ReportBundle\Service\ReportService" >
+            <!--<call method="loadBirtEngine" />-->
+        </service>
+        <service id="jasoft.report" alias="jasoft_viringo_report.service.report" />
+        
+        <service id="jasoft_viringo_report.service.data_export" class="Jasoft\Viringo\ReportBundle\Service\ReportService" >
+            <argument type="service" id="jasoft.resource_locator" />
+            <argument type="service" id="jasoft.report" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+    </services>
+</container>
