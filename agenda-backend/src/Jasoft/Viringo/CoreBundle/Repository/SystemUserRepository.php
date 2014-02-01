@@ -69,4 +69,35 @@ class SystemUserRepository extends \Jasoft\Viringo\CoreBundle\Repository\EntityR
         return ($qb->getQuery()->getSingleScalarResult()>0);
     }
     
+    
+    /**
+     * 
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $systemUser
+     * @return \Jasoft\Viringo\CoreBundle\Entity\SystemSecurityRole[]
+     */
+    public function getAllOrderedSecurityRolesOf($systemUser) {
+        $dql='select distinct ssr '
+            .   'from JasoftViringoCoreBundle:SystemSecurityRole ssr '
+            .       'where ssr in ('
+            .           'select r '
+            .               'from JasoftViringoCoreBundle:SystemSecurityGroupRole ssgr '
+            .                   'join ssgr.role r '
+            .                   'join ssgr.group g '
+            .               'where g in ('
+            .                   'select userGrp '
+            .                       'from JasoftViringoCoreBundle:SystemSecurityUserGroup ssug '
+            .                           'join ssug.group userGrp '
+            .                       'where ssug.user = :systemUser '
+                                    .   'and ssug.active = true '
+            .               ') '
+                            . 'and ssgr.active = true '
+            .       ') '
+            .   'order by ssr.roleName asc'
+        ;
+
+        $query=$this->getEntityManager()->createQuery($dql);
+        $query->setParameter('systemUser', $systemUser);
+        return $query->getResult();
+    }
+    
 }

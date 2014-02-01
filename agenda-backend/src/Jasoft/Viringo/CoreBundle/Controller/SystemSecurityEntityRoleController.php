@@ -21,7 +21,7 @@ class SystemSecurityEntityRoleController extends \Jasoft\Viringo\CoreBundle\Cont
      * @return \Jasoft\Viringo\CoreBundle\Manager\SystemSecurityEntityRoleManager
      */
     private function getSystemSecurityEntityRoleManager() {
-        return $this->get('jasoft_viringo_core.manager.system_security_entity_role');
+        return $this->get('jasoft_viringo_security.manager.system_security_entity_role');
     }
     
     /**
@@ -29,7 +29,7 @@ class SystemSecurityEntityRoleController extends \Jasoft\Viringo\CoreBundle\Cont
      * @return \Jasoft\Viringo\CoreBundle\Manager\SystemSecurityGroupManager
      */
     private function getSystemSecurityGroupManager() {
-        return $this->get('jasoft_viringo_core.manager.system_security_group');
+        return $this->get('jasoft_viringo_security.manager.system_security_group');
     }
     
     /**
@@ -50,7 +50,7 @@ class SystemSecurityEntityRoleController extends \Jasoft\Viringo\CoreBundle\Cont
     }
     
     /**
-     * @Route("/getVerifiedEntityRoles.htm", name="_jasoft_viringo_core_entity_role_get_verified_entity_roles")
+     * @Route("/getVerifiedEntityRoles.htm", name="_jasoft_viringo_security_entity_role_get_verified_entity_roles")
      * @Method("GET")
      */
     public function getVerifiedEntityRolesAction() {

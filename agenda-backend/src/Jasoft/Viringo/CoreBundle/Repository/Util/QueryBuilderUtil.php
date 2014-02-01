@@ -128,15 +128,34 @@ class QueryBuilderUtil {
     }
     
     /**
+     * 
+     * @param SearchFilter $searchFilter
+     */
+    public static function getDoctrineTypeFrom($searchFilter) {
+        if (empty($searchFilter)) {
+            return null;
+        }
+        if ('date'==$searchFilter->getType()) {
+            return \Doctrine\DBAL\Types\Type::DATE;
+        } else if ('datetime'==$searchFilter->getType()) {
+            return \Doctrine\DBAL\Types\Type::DATETIME;
+        }
+        return null;
+    }
+    
+    /**
      * @param \Doctrine\ORM\QueryBuilder $qb
      * @param array $aliasMapping
      * @param array $filters Array de SearchFilter
      * @throws \InvalidArgumentException
      */
     public static function addQueryFilter($qb, $aliasMapping, $filters) {
+        $paramCount=0;
         foreach ($filters as $searchFilter) {
             if ($searchFilter instanceof SearchFilter) {
-                $qb->andWhere(self::parseFilterToQueryExpression($qb, $aliasMapping, $searchFilter));
+                $paramId='qbu'.$paramCount++;
+                $qb->andWhere(self::parseFilterToQueryExpression($qb, $aliasMapping, $searchFilter, ':'.$paramId));
+                $qb->setParameter($paramId, $searchFilter->getValue(), self::getDoctrineTypeFrom($searchFilter));
             } else {
                 throw new \InvalidArgumentException('Los filtros deben ser instancias de "SearchFilter"');
             }
@@ -164,7 +183,7 @@ class QueryBuilderUtil {
      * @param SearchFilter $filter
      * @return \Doctrine\ORM\Query\Expr
      */
-    public static function parseFilterToQueryExpression($qb, $aliasMapping, $filter) {
+    public static function parseFilterToQueryExpression($qb, $aliasMapping, $filter, $paramId=null) {
         $result=null;
         $dc=$filter->getComparator();
         $exp=$qb->expr();
@@ -177,8 +196,16 @@ class QueryBuilderUtil {
             if (SearchFilter::DATACOMPARISON_LIKE === $dc) {
                 $value='%'.$value.'%';
             }
+        } else if ('boolean'===gettype($value)) {
+            $dc=SearchFilter::DATACOMPARISON_EQ;
         }
-        $literalValue=$exp->literal($value);
+        $literalValue=$paramId;
+//        if ($value instanceof \DateTime) {
+//            /* @var $value \DateTime */
+//            $literalValue=$value;
+//        } else if (!is_object($value)) {
+//            $literalValue=$exp->literal($value);
+//        }
         
         if (SearchFilter::DATACOMPARISON_EQ === $dc) {
             $result=$exp->eq($fieldName, $literalValue);

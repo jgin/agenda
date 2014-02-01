@@ -39,7 +39,7 @@ class SwitcherAuthenticationFactory extends \Symfony\Bundle\CoreBundle\Dependenc
 
     protected function getListenerId()
     {
-//        return 'jasoft_viringo_core.authentication.switcher.listener';
+//        return 'jasoft_viringo_security.authentication.switcher.listener';
         return 'security.authentication.listener.form';
     }
 
@@ -53,10 +53,10 @@ class SwitcherAuthenticationFactory extends \Symfony\Bundle\CoreBundle\Dependenc
      */
     protected function createAuthProvider($container, $id, $config, $userProviderId)
     {
-        $provider = 'jasoft_viringo_core.authentication.switcher.provider.'.$id;
+        $provider = 'jasoft_viringo_security.authentication.switcher.provider.'.$id;
         $container
-            ->setDefinition($provider, new \Symfony\Component\DependencyInjection\DefinitionDecorator('jasoft_viringo_core.authentication.switcher.provider'))
-            ->replaceArgument(0, new \Symfony\Component\DependencyInjection\Reference('jasoft_viringo_core.manager.system_user'))
+            ->setDefinition($provider, new \Symfony\Component\DependencyInjection\DefinitionDecorator('jasoft_viringo_security.authentication.switcher.provider'))
+            ->replaceArgument(0, new \Symfony\Component\DependencyInjection\Reference('jasoft_viringo_security.manager.system_user'))
         ;
 
         return $provider;

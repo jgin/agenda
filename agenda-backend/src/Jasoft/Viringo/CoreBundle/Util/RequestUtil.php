@@ -81,7 +81,7 @@ class RequestUtil {
         ));
     }
     
-    public function defaultSuccessJsonResponse($success=true, array $extraData=null) {
+    public function defaultSuccessJsonResponse($success=true, $extraData=null) {
         $result=array('success'=>$success);
         if (!empty($extraData)) {
             foreach ($extraData as $key=>$value) {
@@ -174,7 +174,7 @@ class RequestUtil {
                 }
                 if (!empty($filter->comparison)) { $comparison=$filter->comparison; }
                 $comparator=\Jasoft\Viringo\CoreBundle\Repository\Util\SearchFilter::getComparatorFromStr($comparison);
-                $filters[]=new \Jasoft\Viringo\CoreBundle\Repository\Util\SearchFilter($filter->field, $comparator, $value);
+                $filters[]=new \Jasoft\Viringo\CoreBundle\Repository\Util\SearchFilter($filter->field, $comparator, $value, $filter->type);
             }
             $pageRequestData->setFilters($filters);
         }

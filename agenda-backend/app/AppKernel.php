@@ -16,8 +16,11 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Jasoft\Agenda\AppBundle\JasoftAgendaAppBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle($this),
+                        
             new Jasoft\Viringo\CoreBundle\JasoftViringoCoreBundle(),
+            
+            new Jasoft\Agenda\AppBundle\JasoftAgendaAppBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

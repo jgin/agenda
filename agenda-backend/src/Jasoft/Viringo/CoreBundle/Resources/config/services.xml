@@ -73,7 +73,19 @@
                 <argument >Jasoft\Viringo\CoreBundle\Entity\SystemSecurityRole</argument>
             </call>
             <call method="addEntityClassException" >
+                <argument >Jasoft\Viringo\CoreBundle\Entity\SystemSecurityEntityRole</argument>
+            </call>
+            <call method="addEntityClassException" >
                 <argument >Jasoft\Viringo\CoreBundle\Entity\SystemSecurityGroupRole</argument>
+            </call>
+            <call method="addEntityClassException" >
+                <argument >Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser</argument>
+            </call>
+            <call method="addEntityClassException" >
+                <argument >Jasoft\Viringo\CoreBundle\Entity\SystemSecurityUserGroup</argument>
+            </call>
+            <call method="addEntityClassException" >
+                <argument >Jasoft\Sil\AppBundle\Entity\LegalReasonCanceledContract</argument>
             </call>
         </service>
         
@@ -88,7 +100,7 @@
                 <argument type="service" id="translator" />
             </call>
             <call method="setSystemAuditService">
-                <argument type="service" id="jasoft_viringo_core.service.system_audit" />
+                <argument type="service" id="jasoft_viringo_security.service.system_audit" />
             </call>
         </service>
         
@@ -96,31 +108,55 @@
         
         
         
-        <service id="jasoft_viringo_core.service.system_audit" 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <service id="jasoft_viringo_security.event_listener.aystem_audit_doctrine" 
+                 class="Jasoft\Viringo\CoreBundle\Service\SystemAuditDoctrineEventListener" >
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+            <tag name="doctrine.event_listener" event="postPersist" />
+        </service>
+        <service id="jasoft_viringo_security.service.system_audit" 
                  class="Jasoft\Viringo\CoreBundle\Service\SystemAuditService" >
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
             <call method="setRequestUtil">
                 <argument type="service" id="jasoft.request" />
             </call>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
         </service>
         
-        <service id="jasoft_viringo_core.system_menu.loader" 
+        <service id="jasoft_viringo_security.system_menu.loader" 
                  class="Jasoft\Viringo\CoreBundle\SystemMenu\SecuritySystemMenuLoader" >
             <tag name="jasoft.system_menu" />
         </service>
         
-        <service id="jasoft_viringo_core.service.system_security" 
+        <service id="jasoft_viringo_security.service.system_security" 
                  class="Jasoft\Viringo\CoreBundle\Service\SystemSecurityService" >
             <argument type="service" id="security.context"/>
         </service>
-        <service id="jasoft.security" alias="jasoft_viringo_core.service.system_security" />
+        <service id="jasoft.security" alias="jasoft_viringo_security.service.system_security" />
         
-        <service id="jasoft_viringo_core.service.system_security_menu_role" 
+        <service id="jasoft_viringo_security.service.system_security_menu_role" 
                 class="Jasoft\Viringo\CoreBundle\Service\SystemSecurityMenuRoleService" >
             <call method="setSecurity">
                 <argument type="service" id="jasoft.security" />
             </call>
             <call method="setSystemSecurityRoleManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_security_role" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_security_role" />
             </call>
             <call method="setSystemMenuService">
                 <argument type="service" id="jasoft_viringo_core.service.system_menu" />
@@ -128,54 +164,63 @@
         </service>
         
         
+        
+        
         <!-- Managers -->
-        <service id="jasoft_viringo_core.manager.system_security_group_role" 
+        <service id="jasoft_viringo_security.manager.system_security_group_role" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemSecurityGroupRoleManager"
                 parent="jasoft_viringo_core.manager.abstract" />
-        <service id="jasoft_viringo_core.manager.system_security_group" 
+        <service id="jasoft_viringo_security.manager.system_security_group" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemSecurityGroupManager"
                 parent="jasoft_viringo_core.manager.abstract" >
             <call method="setSystemSecurityRoleManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_security_role" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_security_role" />
             </call>
             <call method="setSystemSecurityGroupRoleManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_security_group_role" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_security_group_role" />
             </call>
         </service>
-        <service id="jasoft_viringo_core.manager.system_security_user_group" 
+        <service id="jasoft_viringo_security.manager.system_security_user_group" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemSecurityUserGroupManager"
                 parent="jasoft_viringo_core.manager.abstract" />
-        <service id="jasoft_viringo_core.manager.system_user_type" 
+        <service id="jasoft_viringo_security.manager.system_user_type" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemUserTypeManager"
                 parent="jasoft_viringo_core.manager.abstract" />
-        <service id="jasoft_viringo_core.manager.system_user" 
+        <service id="jasoft_viringo_security.manager.system_user" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemUserManager"
                 parent="jasoft_viringo_core.manager.abstract" >
             <call method="setSystemUserTypeManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_user_type" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_user_type" />
             </call>
             <call method="setSystemSecurityGroupManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_security_group" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_security_group" />
             </call>
             <call method="setSystemSecurityUserGroupManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_security_user_group" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_security_user_group" />
             </call>
         </service>
-        <service id="jasoft_viringo_core.manager.system_security_role" 
+        <service id="jasoft_viringo_security.manager.system_local_user" 
+                class="Jasoft\Viringo\CoreBundle\Manager\SystemLocalUserManager"
+                parent="jasoft_viringo_core.manager.abstract" >
+            <call method="setEncoderFactory">
+                <argument type="service" id="security.encoder_factory" />
+            </call>
+        </service>
+        <service id="jasoft_viringo_security.manager.system_security_role" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemSecurityRoleManager"
                 parent="jasoft_viringo_core.manager.abstract" >
 <!--            <call method="setSecurity">
                 <argument type="service" id="jasoft.security" />
             </call>-->
         </service>
-        <service id="jasoft_viringo_core.manager.system_security_entity_role" 
+        <service id="jasoft_viringo_security.manager.system_security_entity_role" 
                 class="Jasoft\Viringo\CoreBundle\Manager\SystemSecurityEntityRoleManager"
                 parent="jasoft_viringo_core.manager.abstract" >
             <call method="setSecurity">
                 <argument type="service" id="jasoft.security" />
             </call>
             <call method="setSystemSecurityRoleManager">
-                <argument type="service" id="jasoft_viringo_core.manager.system_security_role" />
+                <argument type="service" id="jasoft_viringo_security.manager.system_security_role" />
             </call>
             <call method="setSystemEntityManager">
                 <argument type="service" id="jasoft_viringo_core.manager.system_entity" />
@@ -184,10 +229,11 @@
         
         
         <!-- Authentication -->
-        <service id="jasoft_viringo_core.authentication.system_user_provider" 
+        <service id="jasoft_viringo_security.authentication.system_user_provider" 
                  class="Jasoft\Viringo\CoreBundle\Service\UserProvider\SystemLocalAndMasterUserProvider">
-            <argument type="service" id="jasoft_viringo_core.manager.system_user" />
-            <argument type="service" id="jasoft_viringo_master.manager.ldap" />
+            <argument type="service" id="jasoft_viringo_security.manager.system_user" />
+            <argument type="service" id="jasoft_viringo_security.manager.system_local_user" />
+            <!--<argument type="service" id="jasoft_viringo_master.manager.ldap" />-->
         </service>
     </services>
 </container>

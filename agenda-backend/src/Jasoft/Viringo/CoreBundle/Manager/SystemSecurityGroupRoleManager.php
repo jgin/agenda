@@ -5,7 +5,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
 /**
  * @author lvercelli
  */
-class SystemSecurityGroupRoleManager extends AbstractManager {
+class SystemSecurityGroupRoleManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     /**
      * 
@@ -34,8 +34,8 @@ class SystemSecurityGroupRoleManager extends AbstractManager {
      * 
      * @param \Jasoft\Viringo\CoreBundle\Entity\SystemSecurityGroup $systemSecurityGroup
      */
-    public function getAllSecurityRolesIdsOfGroup($systemSecurityGroup) {
-        $data=$this->getRepository()->getAllSecurityRolesIdsOfGroup($systemSecurityGroup);
+    public function getAllOrderedSecurityRolesIdsOfGroup($systemSecurityGroup) {
+        $data=$this->getRepository()->getAllOrderedSecurityRolesIdsOfGroup($systemSecurityGroup);
         $result=array();
         foreach ($data as $row) {
             $result[]=$row['id'];

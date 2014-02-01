@@ -7,7 +7,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
  *
  * @author gin
  */
-class SystemSecurityRoleManager extends AbstractManager {
+class SystemSecurityRoleManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     /**
      * 

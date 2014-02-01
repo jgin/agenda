@@ -23,7 +23,7 @@ class SystemSecurityMenuRoleService extends \Jasoft\Viringo\CoreBundle\Service\A
      *
      * @var SystemSecurityService
      */
-    private $security;
+    private $securityService;
     
     /**
      * 
@@ -54,7 +54,7 @@ class SystemSecurityMenuRoleService extends \Jasoft\Viringo\CoreBundle\Service\A
             $ssr=$this->systemSecurityRoleManager->getPersisted($roleName);
             $result
                 ->setRoleId($ssr->getId())
-                ->setGranted($this->security->itemHasRole($roleCapable, $systemMenu->getRoleName()))
+                ->setGranted($this->securityService->itemHasRole($roleCapable, $systemMenu->getRoleName()))
             ;
         } else {
             $result->setGranted(true);
@@ -74,7 +74,26 @@ class SystemSecurityMenuRoleService extends \Jasoft\Viringo\CoreBundle\Service\A
         return $result;
     }
     
+    public function getAlowedMenus() {
+        $rootMenu=$this->systemMenuService->getRootMenu();
+        $this->filterAllowedMenus($rootMenu);
+        return $rootMenu;
+    }
     
+    /**
+     * 
+     * @param SystemMenu $rootMenu
+     */
+    private function filterAllowedMenus($rootMenu) {
+        $allowedSubmenus=array();
+        foreach ($rootMenu->getChildren() as $subMenu) {
+            if ($this->securityService->hasRole($subMenu->getRoleName())) {
+                $this->filterAllowedMenus($subMenu);
+                $allowedSubmenus[]=$subMenu;
+            }
+        }
+        $rootMenu->setChildren($allowedSubmenus);
+    }
     
     public function getSystemMenuService() {
         return $this->systemMenuService;
@@ -93,10 +112,10 @@ class SystemSecurityMenuRoleService extends \Jasoft\Viringo\CoreBundle\Service\A
     }
 
     public function getSecurity() {
-        return $this->security;
+        return $this->securityService;
     }
 
     public function setSecurity(SystemSecurityService $security) {
-        $this->security = $security;
+        $this->securityService = $security;
     }
 }

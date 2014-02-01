@@ -1,2 +1,2 @@
--   Cuando la aplicación se coloque en producción, asegurarse de eliminar el archivo
-    'Service/JavaBridge/Java.inc' si éste ya se encuentra en el include path.
+-   Cuando la aplicaciÃ³n se coloque en producciÃ³n, asegurarse de eliminar el archivo
+    'Service/JavaBridge/Java.inc' si Ã©ste ya se encuentra en el include path.

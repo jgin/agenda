@@ -7,9 +7,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
  *
  * @author gin
  */
-class SystemUserManager extends AbstractManager {
-    
-    const SUPER_ADMIN_USER_NAME='sa';
+class SystemUserManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     /**
      *
@@ -82,29 +80,44 @@ class SystemUserManager extends AbstractManager {
      * @return type
      */
     public function register($entity) {
-        $masterSystemUserType=$this->systemUserTypeManager->getPersisted(SystemUserTypeManager::USER_TYPE_MASTER);
+        $this->verifyDuplicate($entity);
         
         $ut=$entity->getUserType();
         if (empty($ut)) {
-            $entity->setUserType($masterSystemUserType);
+            $local=$this->systemUserTypeManager->getPersisted(SystemUserTypeManager::USER_TYPE_LOCAL);
+            $entity->setUserType($local);
         }
         
         $result=parent::register($entity);
         return $result;
     }
     
+    public function update($entity) {
+        $this->verifyDuplicate($entity);
+        return parent::update($entity);
+    }
+    
     /**
      * 
-     * @param type $systemUser
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $systemUser
      */
     public function verifyDuplicate($systemUser) {
-        
+        /* @var $su \Jasoft\Viringo\CoreBundle\Entity\SystemUser */
+        $su=$this->getRepository()->findOneByUsername($systemUser->getUsername());
+        if (!empty($su) && count($su)>0) {
+            if ($systemUser->getId()!=$su->getId()) {
+                throw new \Jasoft\Viringo\CoreBundle\Exception\DuplicateEntityException('Este usuario ya ha sido registrado antes.');
+            }
+        }
     }
     
     public function registerSuperAdmin() {
-        if (!$this->getSystemUserByName(self::SUPER_ADMIN_USER_NAME)) {
+        if (!$this->getSystemUserByName(SystemSecurityService::SUPER_ADMIN_USER_NAME)) {
             $systemUser=new \Jasoft\Viringo\CoreBundle\Entity\SystemUser();
-            $systemUser->setUsername(self::SUPER_ADMIN_USER_NAME);
+            $systemUser
+                ->setUsername(SystemSecurityService::SUPER_ADMIN_USER_NAME)
+                ->setHidden(true)
+            ;
             $this->registerAndFlush($systemUser);
         }
     }
@@ -150,6 +163,15 @@ class SystemUserManager extends AbstractManager {
             $systemUser->addSecurityGroup($systemSecurityUserGroupMembership);
         }
         $this->updateAndFlush($systemUser);
+    }
+    
+    /**
+     * 
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $systemUser
+     * @return \Jasoft\Viringo\CoreBundle\Entity\SystemSecurityRole[]
+     */
+    public function getAllOrderedSecurityRolesOf($systemUser) {
+        return $this->getRepository()->getAllOrderedSecurityRolesOf($systemUser);
     }
     
     /**

@@ -1,7 +1,4 @@
-imports:
-    - { resource: app_parameters.yml }
-
-
+# This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_pgsql
     database_host: 127.0.0.1
@@ -15,4 +12,6 @@ parameters:
     mailer_password: null
     locale: en
     secret: c0befa656efc2dcb72c2590639106a897
-    database_path: null
+imports:
+    -
+        resource: app_parameters.yml

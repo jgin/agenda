@@ -10,4 +10,14 @@ namespace Jasoft\Viringo\CoreBundle\Repository;
  */
 class SystemLocalUserRepository extends \Jasoft\Viringo\CoreBundle\Repository\EntityRepository
 {
+    
+    public function getSystemLocalUserByName($userName) {
+        $qb=$this->createQueryBuilder('e');
+        $expr=$qb->expr();
+        $qb
+            ->join('e.systemUser', 'su')
+            ->where($expr->eq('su.username', $expr->literal($userName)))
+        ;
+        return $qb->getQuery()->getSingleResult();
+    }
 }

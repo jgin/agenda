@@ -21,17 +21,26 @@ class SecuritySystemMenuLoader implements SystemMenuLoader {
         $root
                 ->addChildren(array(
                     'securityAndAudit'=>SystemMenu::create()
-                        ->setExpanded(true)
+                        ->setExpanded(false)
                         ->setText('Seguridad y auditoria')
                         ->setRoleName('ROLE_GROOUP_MENU_SecurityAndAudit')
+                        ->setIconCls('security')
                         ->addChildren(array(
+//                            'systemLocalUserChangePassword'=>SystemMenu::create()
+//                                ->setEntityName('SystemUser')
+//                                ->setLeaf(true)
+//                                ->setRoleName('ROLE_MENU_ChangePasswordLoggedSystemUser')
+//                                ->setText(utf8_encode('Cambiar contraseña'))
+//                                ->setUseController(true)
+//                                ->setView('ChangePasswordLogged'),
                             'systemUser'=>SystemMenu::create()
                                 ->setEntityName('SystemUser')
                                 ->setLeaf(true)
                                 ->setRoleName('ROLE_MENU_SystemUser')
                                 ->setText('Usuarios del sistema')
                                 ->setUseController(true)
-                                ->setView('List'),
+                                ->setView('List')
+                                ->setIconCls('user'),
                             'systemSecurityGroup'=>SystemMenu::create()
                                 ->setEntityName('SystemSecurityGroup')
                                 ->setLeaf(true)
@@ -46,6 +55,13 @@ class SecuritySystemMenuLoader implements SystemMenuLoader {
                                 ->setText('Permisos del sistema')
                                 ->setUseController(true)
                                 ->setView('Admin'),
+                            'systemAudit'=>SystemMenu::create()
+                                ->setEntityName('SystemAudit')
+                                ->setLeaf(true)
+                                ->setRoleName('ROLE_MENU_SystemAuditRole')
+                                ->setText('Auditoria')
+                                ->setUseController(true)
+                                ->setView('List'),
                     )),
                 ));
     }

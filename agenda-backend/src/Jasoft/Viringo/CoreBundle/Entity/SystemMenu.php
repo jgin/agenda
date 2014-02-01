@@ -132,6 +132,10 @@ class SystemMenu {
         return $this->useController;
     }
 
+    /**
+     * 
+     * @return SystemMenu[]
+     */
     public function getChildren() {
         return $this->children;
     }
@@ -171,10 +175,15 @@ class SystemMenu {
         return $this;
     }
 
-//    public function setChildren($children) {
-//        $this->children = $children;
-//        return $this;
-//    }
+    /**
+     * 
+     * @param SystemMenu[] $children
+     * @return \Jasoft\Viringo\CoreBundle\Entity\SystemMenu
+     */
+    public function setChildren($children) {
+        $this->children = $children;
+        return $this;
+    }
 
     public function getView() {
         return $this->view;

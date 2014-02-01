@@ -8,7 +8,7 @@ namespace Jasoft\Viringo\MasterBundle\Repository;
 class CompanyRepository extends \Jasoft\Viringo\CoreBundle\Repository\EntityRepository
 {
     /**
-     * Lista por Nombre de compañia
+     * Lista por Nombre de compaÃ±ia
      * @param string $query cadena ingresada para la busqueda
      * @return DataPage
      */

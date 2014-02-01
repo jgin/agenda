@@ -7,7 +7,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
  *
  * @author gin
  */
-class SystemSecurityUserGroupManager extends AbstractManager {
+class SystemSecurityUserGroupManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     /**
      * 

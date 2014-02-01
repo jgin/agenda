@@ -17,7 +17,7 @@ class SystemSecurityMenuRoleController extends \Jasoft\Viringo\CoreBundle\Contro
      * @return \Jasoft\Viringo\CoreBundle\Service\SystemSecurityMenuRoleService
      */
     private function getSystemSecurityMenuRoleService() {
-        return $this->get('jasoft_viringo_core.service.system_security_menu_role');
+        return $this->get('jasoft_viringo_security.service.system_security_menu_role');
     }
     
     /**
@@ -25,11 +25,11 @@ class SystemSecurityMenuRoleController extends \Jasoft\Viringo\CoreBundle\Contro
      * @return \Jasoft\Viringo\CoreBundle\Manager\SystemSecurityGroupManager
      */
     private function getSystemSecurityGroupManager() {
-        return $this->get('jasoft_viringo_core.manager.system_security_group');
+        return $this->get('jasoft_viringo_security.manager.system_security_group');
     }
     
     /**
-     * @Route("/getVerifiedMenuRoles.htm", name="_jasoft_viringo_core_entity_role_get_verified_menu_roles")
+     * @Route("/getVerifiedMenuRoles.htm", name="_jasoft_viringo_security_entity_role_get_verified_menu_roles")
      * @Method("GET")
      */
     public function getVerifiedMenuRolesAction() {

@@ -5,7 +5,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
 /**
  * @author lvercelli
  */
-class SystemSecurityGroupManager extends AbstractManager {
+class SystemSecurityGroupManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     /**
      *
@@ -103,14 +103,14 @@ class SystemSecurityGroupManager extends AbstractManager {
     public function saveGrantedSecurityGroupRoles($systemSecurityGroup, $roles) {
         $this->getSystemSecurityGroupRoleManager()->resetAllSecurityRolesOfGroup($systemSecurityGroup);
         if (is_array($roles)) {
-            $registeredIds=$this->getSystemSecurityGroupRoleManager()->getAllSecurityRolesIdsOfGroup($systemSecurityGroup);
+            $registeredIds=$this->getSystemSecurityGroupRoleManager()->getAllOrderedSecurityRolesIdsOfGroup($systemSecurityGroup);
 //            sort($registeredIds);
-            sort($roles);
+//            sort($roles);
             
             $toInsert=array();
             $toActivate=array();
             foreach ($roles as $regId) {
-                $pos=\Jasoft\Viringo\CoreBundle\Util\ArrayUtil::binarySearch($registeredIds, $regId);
+                $pos=\Jasoft\Viringo\CoreBundle\Util\ArrayUtil::binarySearch($registeredIds, $regId, \Jasoft\Viringo\CoreBundle\Util\ArrayUtil::COMPARE_NUMBER);
                 if (isset($pos)) {
                     $toActivate[]=$regId;
                 } else {

@@ -27,13 +27,17 @@ class EmailService extends AbstractService {
         $this->transport = $transport;
     }
 
-    public function createEmailMessageFromTemplate($subject, $from, $to, $templateName, $templateParams) {
+    public function createEmailMessageFromTemplate($subject, $from, $to, $templateName, $templateParams, $utf8encode=true) {
         $emailMessage=new Domain\EmailMessage();
+        $msgBody=$this->templating->render($templateName, $templateParams);
+        if ($utf8encode) {
+            $msgBody=utf8_encode($msgBody);
+        }
         $emailMessage
                 ->setSubject($subject)
                 ->setFrom($from)
                 ->setTo($to)
-                ->setBody(utf8_encode($this->templating->render($templateName, $templateParams)))
+                ->setBody($msgBody)
         ;
         return $emailMessage;
     }

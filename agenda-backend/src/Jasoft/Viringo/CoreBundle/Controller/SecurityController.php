@@ -10,14 +10,28 @@ class SecurityController extends \Jasoft\Viringo\CoreBundle\Controller\AbstractC
 {
     
     /**
-     * @return \Jasoft\Viringo\CoreBundle\Service\SystemMenuService
+     * @return \Jasoft\Viringo\CoreBundle\Service\SystemSecurityService
      */
-    protected function getSystemMenuService() {
-        return $this->container->get('jasoft_viringo_core.service.system_menu');
+    protected function getSystemSecurityService() {
+        return $this->container->get('jasoft.security');
     }
     
     /**
-     * @Route("/login", name="_jasoft_viringo_core_login")
+     * @return \Jasoft\Viringo\CoreBundle\Service\SystemSecurityMenuRoleService
+     */
+    protected function getSystemSecurityMenuRoleService() {
+        return $this->container->get('jasoft_viringo_security.service.system_security_menu_role');
+    }
+    
+    /**
+     * @return \Jasoft\Viringo\CoreBundle\Manager\SystemSecurityEntityRoleManager
+     */
+    protected function getSystemSecurityEntityRoleManager() {
+        return $this->container->get('jasoft_viringo_security.manager.system_security_entity_role');
+    }
+    
+    /**
+     * @Route("/login", name="_jasoft_viringo_security_login")
      * @Template()
      */
     public function loginAction(Request $request)
@@ -35,7 +49,7 @@ class SecurityController extends \Jasoft\Viringo\CoreBundle\Controller\AbstractC
     }
 
     /**
-     * @Route("/login_check", name="_jasoft_viringo_core_check")
+     * @Route("/login_check", name="_jasoft_viringo_security_check")
      */
     public function securityCheckAction()
     {
@@ -43,7 +57,7 @@ class SecurityController extends \Jasoft\Viringo\CoreBundle\Controller\AbstractC
     }
 
     /**
-     * @Route("/logout", name="_jasoft_viringo_core_logout")
+     * @Route("/logout", name="_jasoft_viringo_security_logout")
      */
     public function logoutAction()
     {
@@ -51,11 +65,28 @@ class SecurityController extends \Jasoft\Viringo\CoreBundle\Controller\AbstractC
     }
     
     /**
-     * @Route("/rest/security/listAllowedMenus.htm", name="_jasoft_viringo_core_list_allowed_menus")
+     * @Route("/rest/security/listAllowedMenus.htm", name="_jasoft_viringo_security_list_allowed_menus")
      * @Method("GET")
      */
     public function listAllowedMenusAction() {
-        $menus=array('root'=>$this->getSystemMenuService()->getRootMenu()->getChildren());
+        $menus=array('root'=>$this->getSystemSecurityMenuRoleService()->getAlowedMenus()->getChildren());
         return $this->getRequestUtil()->defaultSuccessJsonResponse(true, $menus);
     }
+    
+    /**
+     * Lista los permisos del usuario actual para la entidad solicitada
+     *
+     * @Route("/rest/systemSecurityRole/getGrantedEntityRoles.htm")
+     * @Method("GET")
+     */
+    public function getGrantedEntityRolesAction() {
+        $requestUtil=$this->getRequestUtil();
+        $request=$this->getRequest();
+        
+        $entityName=$request->query->get('entityName');
+        $data = $this->getSystemSecurityEntityRoleManager()->getGrantedEntityRoles($entityName);
+        
+        return $requestUtil->defaultSuccessJsonResponse(true, array('data'=>$data));
+    }
+    
 }

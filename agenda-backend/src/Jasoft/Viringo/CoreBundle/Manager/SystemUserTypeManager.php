@@ -5,7 +5,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
 /**
  * @author gin
  */
-class SystemUserTypeManager extends AbstractManager {
+class SystemUserTypeManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     const USER_TYPE_MASTER='master';
     const USER_TYPE_LOCAL='local';

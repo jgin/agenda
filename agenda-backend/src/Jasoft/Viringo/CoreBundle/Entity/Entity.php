@@ -30,9 +30,10 @@ class Entity
     private $createdAt;
 
     /**
-     * @var integer $createdByUser
+     * @var \Jasoft\Viringo\CoreBundle\Entity\SystemUser $createdByUser
      *
-     * @ORM\Column(name="createdByUser", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="\Jasoft\Viringo\CoreBundle\Entity\SystemUser")
+     * @ORM\JoinColumn(name="created_by_system_user_id", referencedColumnName="id")
      * @JMS\Exclude
      */
     private $createdByUser;
@@ -54,9 +55,10 @@ class Entity
     private $updatedAt;
 
     /**
-     * @var integer $updatedByUser
+     * @var \Jasoft\Viringo\CoreBundle\Entity\SystemUser $updatedByUser
      *
-     * @ORM\Column(name="updatedByUser", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="\Jasoft\Viringo\CoreBundle\Entity\SystemUser")
+     * @ORM\JoinColumn(name="updated_by_system_user_id", referencedColumnName="id")
      * @JMS\Exclude
      */
     private $updatedByUser;
@@ -78,9 +80,10 @@ class Entity
     private $deletedAt;
 
     /**
-     * @var integer $deletedByUser
+     * @var \Jasoft\Viringo\CoreBundle\Entity\SystemUser $deletedByUser
      *
-     * @ORM\Column(name="deletedByUser", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="\Jasoft\Viringo\CoreBundle\Entity\SystemUser")
+     * @ORM\JoinColumn(name="deleted_by_system_user_id", referencedColumnName="id")
      * @JMS\Exclude
      */
     private $deletedByUser;
@@ -122,7 +125,7 @@ class Entity
      * Set createdAt
      *
      * @param \DateTime $createdAt
-     * @return BaseEntity
+     * @return Entity
      */
     public function setCreatedAt($createdAt)
     {
@@ -144,8 +147,8 @@ class Entity
     /**
      * Set createdByUser
      *
-     * @param integer $createdByUser
-     * @return BaseEntity
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $createdByUser
+     * @return Entity
      */
     public function setCreatedByUser($createdByUser)
     {
@@ -157,7 +160,7 @@ class Entity
     /**
      * Get createdByUser
      *
-     * @return integer 
+     * @return \Jasoft\Viringo\CoreBundle\Entity\SystemUser 
      */
     public function getCreatedByUser()
     {
@@ -168,7 +171,7 @@ class Entity
      * Set createdByIp
      *
      * @param string $createdByIp
-     * @return BaseEntity
+     * @return Entity
      */
     public function setCreatedByIp($createdByIp)
     {
@@ -191,7 +194,7 @@ class Entity
      * Set updatedAt
      *
      * @param \DateTime $updatedAt
-     * @return BaseEntity
+     * @return Entity
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -213,8 +216,8 @@ class Entity
     /**
      * Set updatedByUser
      *
-     * @param integer $updatedByUser
-     * @return BaseEntity
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $updatedByUser
+     * @return Entity
      */
     public function setUpdatedByUser($updatedByUser)
     {
@@ -226,7 +229,7 @@ class Entity
     /**
      * Get updatedByUser
      *
-     * @return integer 
+     * @return \Jasoft\Viringo\CoreBundle\Entity\SystemUser 
      */
     public function getUpdatedByUser()
     {
@@ -237,7 +240,7 @@ class Entity
      * Set updatedByIp
      *
      * @param string $updatedByIp
-     * @return BaseEntity
+     * @return Entity
      */
     public function setUpdatedByIp($updatedByIp)
     {
@@ -260,7 +263,7 @@ class Entity
      * Set deletedAt
      *
      * @param \DateTime $deletedAt
-     * @return BaseEntity
+     * @return Entity
      */
     public function setDeletedAt($deletedAt)
     {
@@ -282,8 +285,8 @@ class Entity
     /**
      * Set deletedByUser
      *
-     * @param integer $deletedByUser
-     * @return BaseEntity
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $deletedByUser
+     * @return Entity
      */
     public function setDeletedByUser($deletedByUser)
     {
@@ -295,7 +298,7 @@ class Entity
     /**
      * Get deletedByUser
      *
-     * @return integer 
+     * @return \Jasoft\Viringo\CoreBundle\Entity\SystemUser
      */
     public function getDeletedByUser()
     {
@@ -306,7 +309,7 @@ class Entity
      * Set deletedByIp
      *
      * @param string $deletedByIp
-     * @return BaseEntity
+     * @return Entity
      */
     public function setDeletedByIp($deletedByIp)
     {

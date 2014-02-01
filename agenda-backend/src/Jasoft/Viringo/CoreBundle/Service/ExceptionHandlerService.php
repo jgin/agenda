@@ -55,10 +55,16 @@ class ExceptionHandlerService extends AbstractService {
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
      */
     public function onKernelException(\Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event) {
-        $this->handleExceptionEmail();
+        $this->handleExceptionEmail($event);
     }
     
-    private function handleExceptionEmail() {
+    /**
+     * 
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+     */
+    private function handleExceptionEmail($event) {
+        $exception=$event->getException();
+        $request=$event->getRequest();
         if ($this->sendEmail) {
             $emailMessage=$this->mailer->createEmailMessageFromTemplate(
                     $this->emailSendingInfo['subject'], $this->emailSendingInfo['sender'], 

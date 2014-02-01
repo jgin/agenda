@@ -43,14 +43,14 @@ class SystemLocalUser extends \Jasoft\Viringo\CoreBundle\Entity\Entity
     /**
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=255)
+     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
      */
     private $salt;
     
     /**
      * @var string
      * 
-     * @ORM\Column(type="string", length=200)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $email;
 

@@ -31,7 +31,6 @@ class SystemEntityManager extends AbstractManager {
     public function getRepository() {
         return parent::getRepository();
     }
-
     
     public function loadSystemEntities() {
         $em=$this->entityManager;
@@ -41,7 +40,7 @@ class SystemEntityManager extends AbstractManager {
         /* @var $md \Doctrine\Common\Persistence\Mapping\ClassMetadata */
         foreach ($allMD as $md) {//            if (array_search($md->getName(), self::$exceptions)===false) {
             if (array_search($md->getName(), $this->exceptionArray)===false) {
-                $entities[]=$md->getName();
+                $entities[]=\Jasoft\Viringo\CoreBundle\Service\Domain\SystemEntityUtil::getLastPartName($md->getName());
             }
         }
         

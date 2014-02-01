@@ -28,13 +28,14 @@ class SystemSecurityGroupRoleRepository extends \Jasoft\Viringo\CoreBundle\Repos
      * @param \Jasoft\Viringo\CoreBundle\Entity\SystemSecurityGroup $systemSecurityGroup
      * @return integer[]
      */
-    public function getAllSecurityRolesIdsOfGroup($systemSecurityGroup) {
+    public function getAllOrderedSecurityRolesIdsOfGroup($systemSecurityGroup) {
         $qb=$this->createQueryBuilder('e');
         $qb
             ->select('r.id')
             ->join('e.group', 'g')
             ->join('e.role', 'r')
             ->where($qb->expr()->eq('g.id', $systemSecurityGroup->getId()))
+            ->orderBy('r.id')
         ;
         return $qb->getQuery()->getScalarResult();
     }

@@ -7,7 +7,13 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
  *
  * @author gin
  */
-class SystemLocalUserManager extends AbstractManager {
+class SystemLocalUserManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
+    
+    /**
+     *
+     * @var \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface
+     */
+    private $encoderFactory;
     
     /**
      * 
@@ -24,30 +30,26 @@ class SystemLocalUserManager extends AbstractManager {
     public function getRepository() {
         return parent::getRepository();
     }
-
     
     /**
      * 
-     * @param type $usename
+     * @param type $userName
      * @return \Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser
      */
-    public function getSystemLocalUserByName($usename) {
-        return $this->getRepository()->findOneBy(array('username'=>$usename));
+    public function getSystemLocalUserByName($userName) {
+        return $this->getRepository()->getSystemLocalUserByName($userName);
     }
     
     /**
      * 
-     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser $entity
-     * @return type
+     * @param \Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser $systemLocalUser
      */
-    public function register($entity) {
-        $masterSystemLocalUserType=$this->systemUserTypeManager->getPersisted(SystemLocalUserTypeManager::USER_TYPE_MASTER);
-        $entity->setUserType($masterSystemLocalUserType);
-        
-        $result=parent::register($entity);
-        return $result;
+    public function encodePassword($systemLocalUser) {
+        $encoder=$this->encoderFactory->getEncoder($systemLocalUser->getSystemUser());
+        $encodedPassword=$encoder->encodePassword($systemLocalUser->getPassword(), null);
+        $systemLocalUser->setPassword($encodedPassword);
     }
-    
+
     /**
      * 
      * @param type $systemUser
@@ -58,18 +60,20 @@ class SystemLocalUserManager extends AbstractManager {
 
     /**
      * 
-     * @return SystemLocalUserTypeManager
+     * @return \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface
      */
-    public function getSystemLocalUserTypeManager() {
-        return $this->systemUserTypeManager;
+    public function getEncoderFactory() {
+        return $this->encoderFactory;
     }
 
     /**
      * 
-     * @param \Jasoft\Viringo\CoreBundle\Service\SystemLocalUserTypeManager $systemUserTypeManager
+     * @param \Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface $encoderFactory
+     * @return \Jasoft\Viringo\CoreBundle\Manager\SystemLocalUserManager
      */
-    public function setSystemLocalUserTypeManager(SystemLocalUserTypeManager $systemUserTypeManager) {
-        $this->systemUserTypeManager = $systemUserTypeManager;
+    public function setEncoderFactory(\Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface $encoderFactory) {
+        $this->encoderFactory = $encoderFactory;
+        return $this;
     }
 
 }

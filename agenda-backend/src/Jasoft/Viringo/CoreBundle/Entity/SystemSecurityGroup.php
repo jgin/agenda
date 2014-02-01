@@ -129,10 +129,10 @@ class SystemSecurityGroup extends \Jasoft\Viringo\CoreBundle\Entity\Entity
         /* @var $ra SystemSecurityGroupRole */
         foreach ($this->rolesAssignment as $ra) {
             if ($ra->isActive()) {
-                $result[]=$ra->getRole()->getRoleName();
+                \Jasoft\Viringo\CoreBundle\Util\ArrayUtil::binaryInsertIfNoExists($result, $ra->getRole()->getRoleName());
             }
         }
-        sort($result);
+        
         $this->orderedRoles=$result;
     }
 

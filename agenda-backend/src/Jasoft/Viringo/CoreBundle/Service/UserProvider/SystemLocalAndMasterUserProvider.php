@@ -17,18 +17,21 @@ class SystemLocalAndMasterUserProvider implements \Symfony\Component\Security\Co
     
     /**
      *
+     * @var \Jasoft\Viringo\CoreBundle\Manager\SystemLocalUserManager
+     */
+    private $systemLocalUserManager;
+    
+    /**
+     *
      * @var \Jasoft\Viringo\MasterBundle\Service\LdapManager
      */
     private $masterLdapManager;
     
-    /**
-     * 
-     * @param \Jasoft\Viringo\CoreBundle\Manager\SystemUserManager $systemUserManager
-     * @param \Jasoft\Viringo\MasterBundle\Service\LdapManager $masterLdapManager
-     */
-    function __construct(\Jasoft\Viringo\CoreBundle\Manager\SystemUserManager $systemUserManager, \Jasoft\Viringo\MasterBundle\Service\LdapManager $masterLdapManager) {
+//    function __construct(\Jasoft\Viringo\CoreBundle\Manager\SystemUserManager $systemUserManager, \Jasoft\Viringo\CoreBundle\Manager\SystemLocalUserManager $systemLocalUserManager, \Jasoft\Viringo\MasterBundle\Service\LdapManager $masterLdapManager) {
+    function __construct(\Jasoft\Viringo\CoreBundle\Manager\SystemUserManager $systemUserManager, \Jasoft\Viringo\CoreBundle\Manager\SystemLocalUserManager $systemLocalUserManager) {
         $this->systemUserManager = $systemUserManager;
-        $this->masterLdapManager = $masterLdapManager;
+        $this->systemLocalUserManager = $systemLocalUserManager;
+//        $this->masterLdapManager = $masterLdapManager;
     }
 
     public function loadUserByUsername($username) {
@@ -36,18 +39,23 @@ class SystemLocalAndMasterUserProvider implements \Symfony\Component\Security\Co
         if (empty($systemUser) || !$systemUser->isActive()) {
             throw new \Symfony\Component\Security\Core\Exception\UsernameNotFoundException();
         }
-        if (\Jasoft\Viringo\CoreBundle\Manager\SystemUserTypeManager::isMasterUserType($systemUser->getUserType())) {
-            $ldap=$this->masterLdapManager->findLdapByStaffLogin($username);
-            
-            $systemUser->setSalt(null);
-            $systemUser->setPassword($ldap->getPassword());
-        }
+//        if (\Jasoft\Viringo\CoreBundle\Manager\SystemUserTypeManager::isMasterUserType($systemUser->getUserType())) {
+//            $ldap=$this->masterLdapManager->findLdapByStaffLogin($username);
+//            
+//            if (empty($ldap)) {
+//                throw new \Symfony\Component\Security\Core\Exception\UsernameNotFoundException();
+//            }
+//            
+//            $systemUser->setPassword($ldap->getPassword());
+//        }
         if (\Jasoft\Viringo\CoreBundle\Manager\SystemUserTypeManager::isLocalUserType($systemUser->getUserType())) {
+            $systemLocalUser=$this->systemLocalUserManager->getSystemLocalUserByName($systemUser->getUsername());
             
+            $systemUser->setPassword($systemLocalUser->getPassword());
         }
+        $systemUser->setSalt(null);
         
-        $roles=array();
-        
+        $systemUser->setRoles($this->getRolesArrayOf($systemUser));
         
         return $systemUser;
     }
@@ -56,8 +64,15 @@ class SystemLocalAndMasterUserProvider implements \Symfony\Component\Security\Co
      * 
      * @param \Jasoft\Viringo\CoreBundle\Entity\SystemUser $systemUser
      */
-    private static function getRolesArrayOf($systemUser) {
-//        $systemUser->getSecurityGroups()
+    private function getRolesArrayOf($systemUser) {
+        $roles=array();
+        $systemSecurityGroupRoles=$this->systemUserManager->getAllOrderedSecurityRolesOf($systemUser);
+        /* @var $ssgr \Jasoft\Viringo\CoreBundle\Entity\SystemSecurityRole */
+        foreach ($systemSecurityGroupRoles as $ssgr) {
+            $roles[]=$ssgr->getRoleName();
+        }
+        
+        return $roles;
     }
 
     public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user) {

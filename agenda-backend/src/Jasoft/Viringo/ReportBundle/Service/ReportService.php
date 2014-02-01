@@ -51,7 +51,7 @@ class ReportService extends \Jasoft\Viringo\CoreBundle\Service\AbstractService {
             $renderTaskConfig->setOutputStream($output);
             $renderTask->setRenderOption($renderTaskConfig);
         } else {
-            throw new \InvalidArgumentException('El formato ['.$format.'] no es v�lido.');
+            throw new \InvalidArgumentException('El formato ['.$format.'] no es válido.');
         }
         
         $renderTask->run();

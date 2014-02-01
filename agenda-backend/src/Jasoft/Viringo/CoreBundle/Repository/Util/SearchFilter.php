@@ -92,11 +92,18 @@ class SearchFilter {
      */
     private $value;
     
+    /**
+     *
+     * @var string
+     */
+    private $type;
     
-    function __construct($fieldName=null, $comparator=null, $value=null) {
+    
+    function __construct($fieldName=null, $comparator=null, $value=null, $type=null) {
         $this->fieldName = $fieldName;
         $this->comparator = $comparator;
         $this->value = $value;
+        $this->type = $type;
     }
 
     
@@ -158,6 +165,25 @@ class SearchFilter {
         return $this;
     }
     
+    /**
+     * 
+     * @return string
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
+     * 
+     * @param string $type
+     * @return \Jasoft\Viringo\CoreBundle\Repository\Util\SearchFilter
+     */
+    public function setType($type) {
+        $this->type = $type;
+        return $this;
+    }
+
+        
     public static function createEqFilter($fieldName, $value) {
         return new SearchFilter($fieldName, self::DATACOMPARISON_EQ, $value);
     }

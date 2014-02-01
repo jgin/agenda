@@ -20,7 +20,7 @@ class SystemSecurityGroupController extends \Jasoft\Viringo\CoreBundle\Controlle
      * @return \Jasoft\Viringo\CoreBundle\Manager\SystemSecurityGroupManager
      */
     private function getSystemSecurityGroupManager() {
-        return $this->get('jasoft_viringo_core.manager.system_security_group');
+        return $this->get('jasoft_viringo_security.manager.system_security_group');
     }
     
     /**

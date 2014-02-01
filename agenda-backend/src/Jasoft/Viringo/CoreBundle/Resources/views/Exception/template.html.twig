@@ -12,13 +12,14 @@
             <table title="{{ type }}">
                 {% for rpName, rpValue in paramArray %}
                 <tr>
-                    <th>{{ rpName }}</th>
+                    <th style="text-align: right">{{ rpName }}</th>
                     <td>{{ rpValue }}</td>
                 </tr>
                 {% endfor %}
             </table>
             {% endfor %}
-        </td></tr>
+        </td>
+    </tr>
     <tr><td style="vertical-align:top; padding-top:5px;">Excepción:</td><td>{{ exception.message }}</td></tr>
     <tr><td style="vertical-align:top; padding-top:5px;">Detalle:</td><td>{{ exception.traceAsString | nl2br }}</td></tr>
 </table>

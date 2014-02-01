@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Jasoft\Viringo\CoreBundle\Entity\SystemUserType;
 use Jasoft\Viringo\CoreBundle\Form\SystemUserTypeType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * SystemUserType controller.
@@ -22,7 +23,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
      * @return \Jasoft\Viringo\CoreBundle\Manager\SystemUserTypeManager
      */
     private function getSystemUserTypeManager() {
-        return $this->get('jasoft_viringo_core.manager.system_user_type');
+        return $this->get('jasoft_viringo_security.manager.system_user_type');
     }
 
     /**
@@ -42,6 +43,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
     /**
      * Lists all SystemUserType entities.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/", name="sutype")
      * @Method("GET")
      * @Template()
@@ -59,6 +61,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
     /**
      * Creates a new SystemUserType entity.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/", name="sutype_create")
      * @Method("POST")
      * @Template("JasoftViringoCoreBundle:SystemUserType:new.html.twig")
@@ -105,6 +108,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
     /**
      * Displays a form to create a new SystemUserType entity.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/new", name="sutype_new")
      * @Method("GET")
      * @Template()
@@ -123,6 +127,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
     /**
      * Finds and displays a SystemUserType entity.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/{id}", name="sutype_show")
      * @Method("GET")
      * @Template()
@@ -148,6 +153,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
     /**
      * Displays a form to edit an existing SystemUserType entity.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/{id}/edit", name="sutype_edit")
      * @Method("GET")
      * @Template()
@@ -193,6 +199,7 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
     /**
      * Edits an existing SystemUserType entity.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/{id}", name="sutype_update")
      * @Method("PUT")
      * @Template("JasoftViringoCoreBundle:SystemUserType:edit.html.twig")
@@ -223,9 +230,11 @@ class SystemUserTypeController extends \Jasoft\Viringo\CoreBundle\Controller\Abs
             'delete_form' => $deleteForm->createView(),
         );
     }
+    
     /**
      * Deletes a SystemUserType entity.
      *
+     * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Route("/{id}", name="sutype_delete")
      * @Method("DELETE")
      */

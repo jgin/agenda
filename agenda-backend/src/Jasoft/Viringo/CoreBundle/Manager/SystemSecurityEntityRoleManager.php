@@ -7,7 +7,7 @@ namespace Jasoft\Viringo\CoreBundle\Manager;
  *
  * @author gin
  */
-class SystemSecurityEntityRoleManager extends AbstractManager {
+class SystemSecurityEntityRoleManager extends \Jasoft\Viringo\CoreBundle\Manager\AbstractManager {
     
     private static $listRoleNameTemplate='ROLE_ENTITY_%s_LIST';
     private static $createRoleNameTemplate="ROLE_ENTITY_%s_CREATE";
@@ -127,11 +127,24 @@ class SystemSecurityEntityRoleManager extends AbstractManager {
     
     /**
      * 
+     * @param string $entityName
+     */
+    public function getGrantedEntityRoles($entityName) {
+        $systemSecurityEntityRole=null;
+        try {
+            $systemSecurityEntityRole=$this->getRepository()->getByEntityName($entityName);
+        } catch (\Doctrine\ORM\NoResultException $ex) {
+        }
+        return $this->getGrantedSystemSecurityEntityRole($systemSecurityEntityRole);
+    }
+    
+    /**
+     * 
      * @param \Jasoft\Viringo\CoreBundle\Entity\SystemSecurityEntityRole $systemSecurityEntityRole
      * @param Domain\RoleCapable $roleCapable
      * @return Domain\GrantedSystemSecurityEntityRole
      */
-    private function getGrantedSystemSecurityEntityRole($systemSecurityEntityRole, $roleCapable) {
+    private function getGrantedSystemSecurityEntityRole($systemSecurityEntityRole, $roleCapable=null) {
         $gsser=new Domain\GrantedSystemSecurityEntityRole();
         if ($systemSecurityEntityRole!=null && $systemSecurityEntityRole->isActive()) {
             $gsser->setTitle($systemSecurityEntityRole->getSystemEntity()->getCaption());
@@ -161,10 +174,14 @@ class SystemSecurityEntityRoleManager extends AbstractManager {
      * @param Domain\RoleCapable $roleCapable
      * @return Domain\GrantedSystemSecurityRole
      */
-    private function getGrantedSecurityRoleFrom($systemSecurityRole, $roleCapable) {
+    private function getGrantedSecurityRoleFrom($systemSecurityRole, $roleCapable=null) {
         $gssr=new Domain\GrantedSystemSecurityRole();
         $gssr->setRoleId($systemSecurityRole->getId());
-        $gssr->setGranted($this->security->itemHasRole($roleCapable, $systemSecurityRole->getRoleName()));
+        if (empty($roleCapable)) {
+            $gssr->setGranted($this->security->hasRole($systemSecurityRole->getRoleName()));
+        } else {
+            $gssr->setGranted($this->security->itemHasRole($roleCapable, $systemSecurityRole->getRoleName()));
+        }
         return $gssr;
     }
     

@@ -13,7 +13,8 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class SystemUser extends \Jasoft\Viringo\CoreBundle\Entity\Entity
     implements \Symfony\Component\Security\Core\User\UserInterface,
-        \Symfony\Component\Security\Core\User\EquatableInterface
+        \Symfony\Component\Security\Core\User\EquatableInterface,
+        \Serializable
 {
     /**
      * @var integer
@@ -234,6 +235,17 @@ class SystemUser extends \Jasoft\Viringo\CoreBundle\Entity\Entity
             }
         }
         return implode(', ', $grps);
+    }
+
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+            $this->username
+        ));
+    }
+
+    public function unserialize($serialized) {
+        list($this->id, $this->username) = unserialize($serialized);
     }
 
 }

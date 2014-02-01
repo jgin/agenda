@@ -21,7 +21,14 @@ class SystemUserController extends \Jasoft\Viringo\CoreBundle\Controller\Abstrac
      * @return \Jasoft\Viringo\CoreBundle\Manager\SystemUserManager
      */
     private function getSystemUserManager() {
-        return $this->get('jasoft_viringo_core.manager.system_user');
+        return $this->get('jasoft_viringo_security.manager.system_user');
+    }
+
+    /**
+     * @return \Jasoft\Viringo\CoreBundle\Manager\SystemLocalUserManager
+     */
+    private function getSystemLocalUserManager() {
+        return $this->get('jasoft_viringo_security.manager.system_local_user');
     }
     
     /**
@@ -41,7 +48,6 @@ class SystemUserController extends \Jasoft\Viringo\CoreBundle\Controller\Abstrac
         return $requestUtil->defaultListJsonResponse($dataPage->getData(), $dataPage->getTotalRecords());
     }
     
-    
     /**
      * @Route("/register.htm", name="jasoft_sec_system_user_register")
      * @Method("POST")
@@ -57,6 +63,16 @@ class SystemUserController extends \Jasoft\Viringo\CoreBundle\Controller\Abstrac
         try {
             $this->getSystemUserManager()->registerAndFlush($systemUser);
             $this->getSystemUserManager()->setSystemUserGroups($systemUser, $groupIds);
+            
+            // registrar como usuario local
+            $password=$request->request->get('password');
+            $systemLocalUser=new \Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser();
+            $systemLocalUser
+                ->setSystemUser($systemUser)
+                ->setPassword($password)
+            ;
+            $this->getSystemLocalUserManager()->encodePassword($systemLocalUser);
+            $this->getSystemLocalUserManager()->registerAndFlush($systemLocalUser);
         } catch (\Jasoft\Viringo\CoreBundle\Exception\GenericException $ge) {
             return $requestUtil->defaultErrorMessage($ge->getMessage());
         }
@@ -74,12 +90,34 @@ class SystemUserController extends \Jasoft\Viringo\CoreBundle\Controller\Abstrac
         
         $id=$request->request->get('id');
         $groupIds=json_decode($request->request->get('gridSystemSecurityGroupSelector'));
+        /* @var $systemUser SystemUser */
         $systemUser=$this->getSystemUserManager()->findById($id);
         $requestUtil->populateEntityFromRequest($request, $systemUser);
         
         try {
             $this->getSystemUserManager()->updateAndFlush($systemUser);
             $this->getSystemUserManager()->setSystemUserGroups($systemUser, $groupIds);
+            
+            // actualizar clave usuario
+            $password=$request->request->get('password');
+            if (!empty($password)) {
+                /* @var $systemLocalUser \Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser */
+                try {
+                    $systemLocalUser=$this->getSystemLocalUserManager()->getSystemLocalUserByName($systemUser->getUsername());
+                } catch (\Doctrine\ORM\NoResultException $ex) {
+                    $systemLocalUser=new \Jasoft\Viringo\CoreBundle\Entity\SystemLocalUser();
+                    $systemLocalUser->setSystemUser($systemUser);
+                }
+                $systemLocalUser->setPassword($password);
+                $this->getSystemLocalUserManager()->encodePassword($systemLocalUser);
+                
+                $id=$systemLocalUser->getId();
+                if (empty($id)) {
+                    $this->getSystemLocalUserManager()->register($systemLocalUser);
+                }
+                
+                $this->getSystemLocalUserManager()->updateAndFlush($systemLocalUser);
+            }
         } catch (\Jasoft\Viringo\CoreBundle\Exception\GenericException $ge) {
             return $requestUtil->defaultErrorMessage($ge->getMessage());
         }
